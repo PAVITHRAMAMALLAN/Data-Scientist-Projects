@@ -1,0 +1,239 @@
+PROJECT CAB
+By Pavithra Mamallan
+18th June 2019
+
+SYNOPSIS
+S.No	Topic	Page No.
+1	Introduction	3
+1.1	Problem Statement	3
+1.2	Data	3
+2	Pre-Processing 	4
+2.1	Missing Value Analysis	4
+2.2	Outlier Analysis	5
+2.3	Feature Selection	6
+2.4	Sampling 	7
+3	Modeling	8
+3.1	Multiple Linear Regression	8
+3.2	Decision Tree Regression	10
+4	Error Metrics	11
+4.1	R2 value	11
+4.2	MAPE, MSE, RMSE, MAE values	11
+5	Conclusion	13
+6	Appendix : Graphs	14
+
+
+Chapter 1
+1.	Introduction
+1.1.	Problem Statement
+You are a cab rental start-up company. You have successfully run the pilot project and now want to launch your cab service across the country. You have collected the historical data from your pilot project and now have a requirement to apply analytics for fare prediction. You need to design a system that predicts the fare amount for a cab ride in the city.
+1.2.	Data
+The dataset “train_cab” contains 16067 observations and 7 variables. The dependent variable is ‘fare_amount.’ The independent variables are 'pickup_datetime', 'pickup_longitude', 'pickup_latitude', 'dropoff_longitude', 'dropoff_latitude', 'passenger_count'.
+Output Variable
+•	Fare_amount – The amount of money paid for taxi ride. In the dataset, the values are given as factor datatype. It is converted into numeric datatype.
+Features
+•	Pickup_datetime – The date and time when the taxi ride started. It is in float datatype. It is converted into datetime datatype.
+•	Pickup_latitude – The latitude of the location of pickup point of the passenger for the taxi ride. It is in numeric datatype.
+•	Pickup_longitude – The longitude of the location of pickup point of the passenger for the taxi ride. It is in numeric datatype.
+•	Dropoff_latitude – The latitude of the location of dropoff point of the passenger for the taxi ride. It is in numeric datatype.
+•	Dropoff_longitude – The longitude of the location of dropoff point of the passenger for the taxi ride. It is in numeric datatype.
+
+
+Chapter 2
+2.	Pre-processing techniques
+2.1.	Missing Value Analysis
+Any predictive modeling requires an important step which looks at the data deeply before we start modeling. However, in data mining terms looking at data refers to so much more than just looking. Looking at data refers to exploring the data, cleaning the data as well as visualizing the data through graphs and plots. This is often called as Exploratory Data Analysis. 
+Since, the dataset contains Missing values. It is very important to remove missing values from the dataset. First, we have to analyse the amount of missing values present in the dataset. The dataset contains 1542 observations as missing values. The concept of missing values is important to understand in order to successfully manage data.  If the missing values are not handled properly, then it may lead to drawing an inaccurate inference about the data.  Due to improper handling, the result obtained may differ from ones where the missing values are present. The amount of missing values present in the dataset is represented in percentage for easy understanding.
+ 
+There are three main ways in which the missing values can be imputed in the dataset. 
+	Mean Method
+	Median Method
+	KNN Imputation Method
+Mean Method : In this method, mean of the variable is taken without considering the missing values. This value is imputed instead of all the missing observations in that variable.
+Median Method : In this method, median of the variable is calculated without considering the missing values. Then, this median value id imputed instead of all the missing observations in that variable.
+KNN Imputation : In this method, the KnnImputation function is called with dataset and k values as arguments. It is an algorithm that is used for matching a point with its closest k neighbours in a multi-dimensional space. It can be used for data that are continuous, discrete, ordinal and categorical which makes it particularly useful for dealing with all kind of missing data. For every missing value, k nearest neighbours is assumed and the average value of those is imputed for that observation. This is done irrespective of the variables.
+
+2.2.	Outlier Analysis
+Outliers are extreme values that deviate from other observations on data; they may indicate variability in a measurement, experimental errors or a novelty. In other words, an outlier is an observation that diverges from an overall pattern on a sample. Outliers can be detected using one of the four major techniques.
+•	Graphical Plot – Box plot
+•	Statistical Technique – Grubb’s test
+•	R package – Outlier
+•	Experiment
+Most of the times, we use only Boxplot method which is most suitable method for all kinds of data. If we consider Grubb’s test, which is the statistical technique for detecting the outliers, it is limited only to the normally distributed data. We cannot expect the normally distributed data all the time. Often the data will be skewed. Hence, it is not possible to use Grubb’s test for all data. R package, ”Outlier” works on the mean concept. It calculates the mean of the variable and then detects which values are falling very far from the mean. This may give some wrong answers and also it takes so much time.
+A box plot is a highly visually effective way of viewing a clear summary of one or more sets of data. It is particularly useful for quick summarizing and comparison of different sets of variables. At a glance, a box plot allows a graphical display of the distribution of results and provides indications of symmetry within the data.
+               
+The plots clearly show that the variables contain extreme values or outliers. The numeric variables are selected and plotted using box plot. The outliers are detected and given ‘NA’ . Finally the observations with NA are removed. 
+
+2.3.	Feature Selection
+Feature Selection is one of the core concepts in machine learning which hugely impacts the performance of the model. The data features that are used to train the machine learning models have a huge influence on the performance. Irrelevant or partially relevant features can negatively impact model performance. 
+From the ‘datetime’ variable, date, day, month, year, hour, minutes are extracted separately. All the variables are converted into factor datatype. Another variable named ‘Distance’ is introduced to the dataset with the help of four variables namely
+	Pickup latitude
+	Pickup longitude
+	Dropoff latitude 
+	Dropoff longitude
+The following function is used to calculate the distance in r,
+data$distance[i]= distGeo(c(data$pickup_longitude[i], data$pickup_latitude[i]), c(data$dropoff_longitude[i], data$dropoff_latitude[i]))
+The following variables do not contribute to the prediction of ‘fare amount’ and so these are eliminated from the dataset.
+o	Minutes
+o	Day
+o	Pickup_Latitude
+o	Pickup_Longitude
+o	Dropoff_Longitude
+o	Dropoff_Latitude
+o	Date
+o	Time
+o	Pickup_Datetime
+Dummy variables are created for hour, year, month and passenger count. Dummy variables are useful because they enable us to use a single regression equation to represent multiple groups. This means that we don't need to write out separate equation models for each subgroup. The dummy variables act like 'switches' that turn various parameters on and off in an equation.
+
+2.4.	Sampling
+Sampling is the selection of a subset (a statistical sample) of individuals from within a statistical population to estimate characteristics of the whole population.
+	Population parameter. A population parameter is the true value of a population attribute.
+	Sample statistic. A sample statistic is an estimate, based on sample data, of a population parameter.
+The quality of a sample statistic (i.e., accuracy, precision, representativeness) is strongly affected by the way that sample observations are chosen; that is., by the sampling method. Some of the Sampling methods are
+•	Simple random sampling
+•	Stratified sampling
+•	Systematic sampling
+For this dataset, simple random sampling is used since the dependent variable is continuous. The dataset is divided into train and test data. 80% of the data is separated for training the data and the remaining 20% is for testing the data.
+The process of training an ML model involves providing an ML algorithm (that is, the learning algorithm) with training data to learn from. The term ML model refers to the model artefact that is created by the training process. The training data must contain the correct answer, which is known as a target or target attribute. The learning algorithm finds patterns in the training data that map the input data attributes to the target (the answer that you want to predict), and it outputs an ML model that captures these patterns.
+
+
+
+Chapter 3
+3.	Modeling
+In the previous sections we have done all the pre-processing steps in the dataset to develop the model. Now, as our problem statement is to predict the fare amount, which is a continuous variable, we build models for Regression analysis. Always, we have move from simple to complex. Hence, the first model that we are going to build is Multiple Linear Regression. And then we move on to complex algorithm, Decision Tree Regression.
+3.1.	Multiple Linear Regression
+Multiple linear regression attempts to model the relationship between two or more explanatory variables and a response variable by fitting a linear equation to observed data. Every value of the independent variable x is associated with a value of the dependent variable y.
+The Formula for Multiple Linear Regression Is
+Y = β0 + β1X1 + β2X2 + · · · + βpXp + ε
+where, 
+Y=dependent variable
+X=explanatory variables
+β0=y-intercept (constant term)
+βp=slope coefficients for each explanatory variable
+ϵ=the model’s error term (also known as the residuals)
+
+Summary of Linear Regression model is as follows.
+Call:
+lm(formula = fare_amount ~ ., data = train)
+
+Residuals:
+     Min           1Q         Median           3Q            Max 
+-18.0535        -1.3415      -0.4016         0.8673        18.3465 
+
+Coefficients:
+                     Estimate    Std. Error    t value    Pr(>|t|)    
+(Intercept)           3.55024      0.09202      38.580    < 2e-16 ***
+distance              1.94161      0.01294     150.095    < 2e-16 ***
+hourDaytime           0.15704      0.06255       2.511   0.012065 *
+hourEarly.morning    -0.72503      0.07404      -9.792    < 2e-16 ***
+hourLate.Night       -0.61961      0.05479     -11.309    < 2e-16 ***
+hourMorning          -0.62266      0.06569      -9.479    < 2e-16 ***
+hourNight            -0.15704      0.06255      -2.511   0.012065 * 
+year2009             -1.83421      0.09667     -18.973    < 2e-16 ***
+year2010             -0.05359     0.07401      -0.724     0.468995    
+year2011              0.01595     0.07405       0.215     0.829431    
+year2012              0.47347     0.07352       6.440     1.25e-10 ***
+year2013              1.33641     0.07483      17.860      < 2e-16 ***
+year2014              1.47470     0.07639      19.305      < 2e-16 ***
+year2015              1.83421     0.09667      18.973      < 2e-16 ***
+month01              -0.41686     0.10097      -4.129     3.68e-05 ***
+month02               0.04079     0.09784       0.417     0.676778    
+month03               0.08917     0.09518       0.937     0.348854    
+month04               0.16958     0.09690       1.750     0.080143 .  
+month05               0.34206     0.09575       3.573     0.000355 ***
+month06               0.23351     0.09562       2.442     0.014623 *  
+month07               0.18239     0.10164       1.794     0.072773 .  
+month08               0.17789     0.10382       1.713     0.086659 .  
+month09               0.60877     0.10194       5.972     2.42e-09 ***
+month10               0.58424     0.10120       5.773     8.00e-09 ***
+month11               0.61233     0.10093       6.067     1.35e-09 ***
+month12               0.41686     0.10097       4.129     3.68e-05 ***
+passenger_count1     -0.33270     0.15841      -2.100     0.035729 *
+passenger_count2      0.07676     0.05963       1.287     0.198032    
+passenger_count3      0.26931     0.10372       2.596     0.009431 ** 
+passenger_count4      0.12018     0.14473       0.830     0.406361    
+passenger_count5      0.08914     0.08490       1.050     0.293761    
+passenger_count6      0.33270     0.15841       2.100     0.035729 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 2.169 on 10932 degrees of freedom
+Multiple R-squared:  0.6839,	Adjusted R-squared:  0.6832 
+F-statistic: 876.2 on 27 and 10932 DF,  p-value: < 2.2e-16
+
+StepAIC
+The stepwise regression (or stepwise selection) consists of iteratively adding and removing predictors, in the predictive model, in order to find the subset of variables in the data set resulting in the best performing model that is a model that lowers prediction error. AIC is Akaike information criterion (AIC). Main approaches of stepwise selection are the forward selection, backward elimination and a combination of the two. The procedure has advantages if there are numerous potential explanatory variables, but it is also criticized for being a paradigmatic example of data dredging those significant variables may be obtained from “noise” variables. The stepAIC() function also allows specification of the range of variables to be included in the model by using the scope argument.
+VIF
+A variance inflation factor (VIF) detects multicollinearity in regression analysis. Multicollinearity is when there's correlation between predictors (i.e. independent variables) in a model; its presence can adversely affect your regression results.
+          Variables         VIF
+1           distance      1.012062
+2        hourDayTime      1.258615
+3  hourEarly.morning      1.186073
+4     hourLate.Night      1.345420
+5        hourMorning      1.230736
+6          hourNight      1.265916
+7           year2009      1.591636
+8           year2010      1.734392
+9           year2011      1.726053
+10          year2012      1.753692
+11          year2013      1.734777
+12          year2014      1.680250
+13          year2015      1.426033
+14           month01      1.698421
+15           month02      1.716666
+16           month03      1.813265
+17           month04      1.784400
+18           month05      1.784752
+19           month06      1.762675
+20           month07      1.659057
+21           month08      1.672971
+22           month09      1.694013
+23           month10      1.671223
+24           month11      1.687449
+25           month12      1.624695
+26  passenger_count1      1.236485
+27  passenger_count2      1.038259
+28  passenger_count3      1.021369
+29  passenger_count4      1.012462
+30  passenger_count5      1.029164
+31  passenger_count6      1.018894
+
+3.2.	Decision Tree Regression
+Decision tree builds regression or classification models in the form of a tree structure. It breaks down a dataset into smaller and smaller subsets while at the same time an associated decision tree is incrementally developed. The final result is a tree with decision nodes and leaf nodes. A decision node has two or more branches, each representing values for the attribute tested. Leaf node represents a decision on the numerical target. The topmost decision node in a tree which corresponds to the best predictor called root node. Decision trees can handle both categorical and numerical data.
+‘rpart’ function is used for Decision Tree Regression Analysis. rpart() function helps establish a relationship between a dependant and independent variables so that a business can understand the variance in the dependant variables based on the independent variables.
+
+
+Chapter 4
+4.	Error Metrics
+Predictive Modeling works on constructive feedback principle. You build a model. Get feedback from metrics, make improvements and continue until you achieve a desirable accuracy. Evaluation metrics explain the performance of a model. An important aspect of evaluation metrics is their capability to discriminate among model results. Simply, building a predictive model is not your motive. But, creating and selecting a model which gives high accuracy on out of sample data. Hence, it is crucial to check accuracy of the model prior to computing predicted values.
+4.1.	R2 Value
+The R^2 (or R Squared) metric provides an indication of the goodness of fit of a set of predictions to the actual values. In statistical literature, this measure is called the coefficient of determination. This is a value between 0 and 1 for no-fit and perfect fit respectively. It is the proportion of variance in the dependent variable that is predictable from the independent variable(s). Another definition is “(total variance explained by model) / total variance.” So if it is 100%, the two variables are perfectly correlated, i.e., with no variance at all. A low value would show a low level of correlation, meaning a regression model that is not valid, but not in all cases. The formula for calculating R2 is
+ 
+R2 value for Linear Regression is 0.69 and that of Decision Tree is 0.62.
+4.2.	MAE, MSE, RMSE, MAPE
+MAE
+The Mean Absolute Error (MAE) is the average of the absolute differences between predictions and actual values. It gives an idea of how wrong the predictions were. The measure gives an idea of the magnitude of the error, but no idea of the direction (over or under predicting). A value of 0 indicates no error or perfect predictions. The formula for MAE is
+ 
+The MAE value for Linear Regression is 1.58 and that of Decision Tree is 1.77.
+MSE
+The Mean Squared Error (or MSE) is much like the mean absolute error in that it provides a gross idea of the magnitude of error. It measures the average of the squares of the errors — that is, the average squared difference between the estimated values and what is estimated. MSE is a risk function, corresponding to the expected value of the squared error loss. The fact that MSE is almost always strictly positive (and not zero) is because of randomness or because the estimator does not account for information that could produce a more accurate estimate. The formula for calculating MSE is
+ 
+The MSE value for Linear Regression is 4.93 and that of Decision Tree is 5.81.
+RMSE
+Taking the square root of the mean squared error converts the units back to the original units of the output variable and can be meaningful for description and presentation. This is called the Root Mean Squared Error (or RMSE). The ‘squared’ nature of this metric helps to deliver more robust results which prevents cancelling the positive and negative error values. In other words, this metric aptly displays the plausible magnitude of error term. It avoids the use of absolute error values which is highly undesirable in mathematical calculations. As compared to mean absolute error, RMSE gives higher weightage and punishes large errors. RMSE metric is given by:
+ 
+The RMSE value for Linear Regression is 2.21 and that of Decision Tree is 2.41.
+MAPE
+The MAPE (Mean Absolute Percent Error) measures the size of the error in percentage terms. It measures this accuracy as a percentage, and can be calculated as the average absolute percent error for each time period minus actual values divided by actual values. Where At is the actual value and Ft is the forecast value, this is given by:
+ 
+The MAPE value for Linear Regression is 0.19 and that of Decision Tree is 0.22.
+
+Chapter 5
+5.	Conclusion
+From all the Error metrics, it is arrived at a conclusion that Multiple Linear Regression is more suitable for this dataset than Decision Tree Regression. R2, which is giving the accuracy of the model, is high in Linear Regression. MAE, RMSE, MSE, MAPE are very low in Linear Regression. 
+Hence, Multiple Linear Regression model is used for predicting the test dataset. Before giving the dataset into the model, it is subjected to all the pre-processing techniques. 
+The Accuracy of Linear Regression Model is 68%.
+The Accuracy of Decision Tree Regression Model is 62%.
+The Prediction of the ‘test’ dataset in done through R language .
+
+
+   
